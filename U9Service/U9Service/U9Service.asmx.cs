@@ -65,12 +65,12 @@ namespace U9Service
             string userName = par.UserName;
             //邮箱信息设置
             MailSender mailSender = new MailSender();
-            mailSender.Email = "sys_u9@auctus.cn";
-            mailSender.Password = "AuSyS!&*";
+            mailSender.Email = "sys_sup@auctus.cn";
+            mailSender.Password = "Qwelsy@123";
             mailSender.Host = "192.168.1.1";
             mailSender.Port = 25;
             mailSender.IsBodyHtml = "true";
-            mailSender.From =new MailAddress("sys_u9@auctus.cn","深圳力同芯科技发展有限公司") ;
+            mailSender.From = new MailAddress("sys_sup@auctus.cn", "深圳力同芯科技发展有限公司");
             mailSender.To = new ArrayList();
             mailSender.CC = new ArrayList();
             mailSender.Bcc = new ArrayList();
@@ -151,7 +151,7 @@ namespace U9Service
                 if (dr.Length > 0)
                 {
                     strBody = "<H2>" + dr[0]["Supplier"].ToString() + "：</H2><H2></br>&nbsp;&nbsp;如下未来8周需求计划，供生产备货安排!</H2><h2>&nbsp;&nbsp;请务必达成交期，如有问题请及时反馈，谢谢配合与支持！！ </h2>";
-                    strBody += "<span style='font-weight:bold;'>备注：</span></br><span>电子物料要求交货数量：(紧急欠料+第一周+第二周)-已交在检</span></br><span>结构物料要求交货数量：(紧急欠料+第一周)-已交在检</span></br><span>包材/配件物料要求交货数量：(紧急欠料+第一周)-已交在检</span>";
+                    strBody += "<span style='font-weight:bold;'>备注：</span></br><span>电子物料要求交货数量：(紧急欠料+第一周+第二周+第三周)-已交在检</span></br><span>结构物料要求交货数量：(紧急欠料+第一周)-已交在检</span></br><span>包材/配件物料要求交货数量：(紧急欠料+第一周)-已交在检</span>";
                     //strBody = "<h2>&nbsp;&nbsp;请验证数据是否有问题，谢谢！</h2>";
                     emailContent += style + strBody;
                     emailContent += "<table>";
