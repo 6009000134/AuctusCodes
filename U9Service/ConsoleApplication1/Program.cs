@@ -10,7 +10,10 @@ namespace ConsoleApplication1
     {
         static void Main(string[] args)
         {
-
+            string path = AppContext.BaseDirectory + "log4net.config";
+            //log4net.Config.XmlConfigurator.Configure(new System.IO.FileInfo(path));
+            MyPlatform.Common.LogHelper.Default.LoadXmlConfig(path);
+            MyPlatform.Common.LogHelper.Default.WriteInfo("123213s");
             Console.WriteLine(Convert.ToInt32(DateTime.Now.DayOfWeek));
             Console.WriteLine(Convert.ToInt32(DateTime.Now.AddDays(1).DayOfWeek));
             Console.WriteLine(Convert.ToInt32(DateTime.Now.AddDays(2).DayOfWeek));
