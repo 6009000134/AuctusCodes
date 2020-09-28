@@ -22,15 +22,59 @@ namespace U9Service
     [System.Web.Script.Services.ScriptService]
     public class U9Service : System.Web.Services.WebService
     {
+        [WebMethod]        
+        public void MailTest()
+        {
+            try
+            {
+                DataSet ds = new DataSet();
+                ds = DbHelperSQL.Query("exec sp_Auctus_MailToSupplier N''");
+                if (ds.Tables[1].Rows.Count == 0)
+                {
+                    return;
+                }
+                TheadPar par = new TheadPar();
+                par.ds = ds;
+                par.UserName = "SSAdmin";
+                Thread th = new Thread(new ParameterizedThreadStart(MailToSupplier));
+                th.Start(par);
+            }
+            catch (Exception ex)
+            {
+                return;
+            }
+            return;
+            ////邮箱信息设置
+            //MailSender mailSender = new MailSender();
+            //mailSender.Email = "sys_sup@auctus.cn";
+            //mailSender.Password = "Qwelsy@123";
+            //mailSender.Host = "192.168.1.1";
+            //mailSender.Port = 25;
+            //mailSender.IsBodyHtml = "true";
+            //mailSender.From = new MailAddress("sys_sup@auctus.cn", "深圳力同芯科技发展有限公司");
+            //mailSender.To = new ArrayList();
+            //mailSender.CC = new ArrayList();
+            //mailSender.Bcc = new ArrayList();
+            //mailSender.Subject = "邮件测试"+DateTime.Now.ToString("yyyyMMddHHmmss");
+            //mailSender.Body = "<H1>Hello</H2>";
+            //mailSender.To.Add("491675469@qq.com");
+            //try
+            //{
+            //    mailSender.SendMail();
+            //}
+            //catch (Exception ex)
+            //{
+            //}
+        }
         /// <summary>
         /// 邮件推送供应商欠料信息        
         /// </summary>
         /// <returns></returns>
         [WebMethod]
-        public string MailToSupplier(string supplierID,string userName)
+        public string MailToSupplier(string supplierID, string userName)
         {
             string result = "false";
-           try
+            try
             {
                 DataSet ds = new DataSet();
                 ds = DbHelperSQL.Query("exec sp_Auctus_MailToSupplier N'" + supplierID + "'");
@@ -50,10 +94,6 @@ namespace U9Service
                 result = "false";
             }
             return result;
-            //List<string> li = new List<string>();
-            //li.Add("exec sp_MailTest N'1001805031680365,1001808160203911,1001805230231106,1001708090008910,1001708090009355'");
-            //li.Add("exec sp_MailTest N''");
-
         }
         /// <summary>
         /// 8周欠料结果邮件发送功能
@@ -79,12 +119,12 @@ namespace U9Service
             //Table0为无邮箱供应商
             if (ds.Tables[0].Rows.Count > 0)
             {
-                GetNoneEmaiContent(ds.Tables[0], ref mailSender,userName);
+                GetNoneEmaiContent(ds.Tables[0], ref mailSender, userName);
             }
             //Table1为有邮箱供应商
             if (ds.Tables[1].Rows.Count > 0)
             {
-                GetEmaiContent(ds.Tables[1], ref mailSender,userName);
+                GetEmaiContent(ds.Tables[1], ref mailSender, userName);
             }
         }
         /// <summary>
@@ -93,7 +133,7 @@ namespace U9Service
         /// <param name="dt">无邮箱信息供应商集合</param>
         /// <param name="liSql"></param>
         /// <param name="mailSender">邮件发送对象</param>
-        private void GetNoneEmaiContent(DataTable dt, ref MailSender mailSender,string userName)
+        private void GetNoneEmaiContent(DataTable dt, ref MailSender mailSender, string userName)
         {
             List<string> liSql = new List<string>();//邮件发送日志sql
             //邮件样式
@@ -113,14 +153,14 @@ namespace U9Service
             }
             noneEmailSup += "</table>";
             mailSender.Body = noneEmailSup;
-            mailSender.To.Add(dt.Rows[0]["Email"]);
+            mailSender.To=new ArrayList(dt.Rows[0]["Email"].ToString().TrimEnd(';').Split(';'));
             string sql = "";
             string toContent = ArrayListToStr(mailSender.To);
             string ccContent = ArrayListToStr(mailSender.CC);
-           try
+            try
             {
                 mailSender.SendMail();
-                sql = "insert into Auctus_MailLog values('"+ userName + "','" + mailSender.Subject + "','" + mailSender.Body.Replace("'", "''") + "','" + mailSender.From + "','" + toContent + "','" + ccContent + "',GetDate(),1,'')";
+                sql = "insert into Auctus_MailLog values('" + userName + "','" + mailSender.Subject + "','" + mailSender.Body.Replace("'", "''") + "','" + mailSender.From + "','" + toContent + "','" + ccContent + "',GetDate(),1,'')";
             }
             catch (Exception ex)
             {
@@ -135,7 +175,7 @@ namespace U9Service
         /// <param name="dt">邮件信息集合</param>
         /// <param name="liSql">邮件发送日志sql</param>
         /// <param name="mailSender">邮件发送对象</param>
-        private void GetEmaiContent(DataTable dt, ref MailSender mailSender,string userName)
+        private void GetEmaiContent(DataTable dt, ref MailSender mailSender, string userName)
         {
             List<string> liSql = new List<string>();//邮件发送日志sql
             string strBody = "";
@@ -146,8 +186,8 @@ namespace U9Service
             //保存邮件发送记录                
             for (int i = 1; i < index; i++)
             {
-                string emailContent = "";                
-                DataRow[] dr = dt.Select("OrderNo=" + i.ToString());                
+                string emailContent = "";
+                DataRow[] dr = dt.Select("OrderNo=" + i.ToString());
                 if (dr.Length > 0)
                 {
                     strBody = "<H2>" + dr[0]["Supplier"].ToString() + "：</H2><H2></br>&nbsp;&nbsp;如下未来8周需求计划，供生产备货安排!</H2><h2>&nbsp;&nbsp;请务必达成交期，如有问题请及时反馈，谢谢配合与支持！！ </h2>";
@@ -168,7 +208,7 @@ namespace U9Service
                                               <td nowrap = 'nowrap' > 第四周 </td >            <td nowrap = 'nowrap' > 第五周 </td >            <td nowrap = 'nowrap' > 第六周 </td >                                                  
                                                               <td nowrap = 'nowrap' > 第七周 </td >            <td nowrap = 'nowrap' > 第八周 </td >         <td nowrap = 'nowrap' rowspan = '2' > 8周欠料数量 </td >   </tr >";
                 }
-                emailContent+= "<tr bgcolor='#cae7fc'>";
+                emailContent += "<tr bgcolor='#cae7fc'>";
                 DateTime monday = GetMonday(DateTime.Now);
                 for (int w = 0; w < 8; w++)
                 {
@@ -181,21 +221,21 @@ namespace U9Service
                 {
                     emailContent += "<tr>";
                     //拼接邮件内容
-                    emailContent +="<td>"+ dr[j]["MRPCategory"].ToString()+"</td>";
-                    emailContent +="<td>"+ dr[j]["Code"].ToString()+"</td>";
-                    emailContent +="<td>"+ dr[j]["Name"].ToString()+"</td>";
-                    emailContent +="<td>"+ dr[j]["SPECS"].ToString()+"</td>";
-                    emailContent +="<td>"+ dr[j]["RcvQty"].ToString()+"</td>";
-                    emailContent +="<td>"+ dr[j]["w0"].ToString()+"</td>";
-                    emailContent +="<td>"+ dr[j]["w1"].ToString()+"</td>";
-                    emailContent +="<td>"+ dr[j]["w2"].ToString()+"</td>";
-                    emailContent +="<td>"+ dr[j]["w3"].ToString()+"</td>";
-                    emailContent +="<td>"+ dr[j]["w4"].ToString()+"</td>";
-                    emailContent +="<td>"+ dr[j]["w5"].ToString()+"</td>";
-                    emailContent +="<td>"+ dr[j]["w6"].ToString()+"</td>";
-                    emailContent +="<td>"+ dr[j]["w7"].ToString()+"</td>";
-                    emailContent +="<td>"+ dr[j]["w8"].ToString()+"</td>";
-                    emailContent +="<td>"+ dr[j]["Total"].ToString()+"</td>";
+                    emailContent += "<td>" + dr[j]["MRPCategory"].ToString() + "</td>";
+                    emailContent += "<td>" + dr[j]["Code"].ToString() + "</td>";
+                    emailContent += "<td>" + dr[j]["Name"].ToString() + "</td>";
+                    emailContent += "<td>" + dr[j]["SPECS"].ToString() + "</td>";
+                    emailContent += "<td>" + dr[j]["RcvQty"].ToString() + "</td>";
+                    emailContent += "<td>" + dr[j]["w0"].ToString() + "</td>";
+                    emailContent += "<td>" + dr[j]["w1"].ToString() + "</td>";
+                    emailContent += "<td>" + dr[j]["w2"].ToString() + "</td>";
+                    emailContent += "<td>" + dr[j]["w3"].ToString() + "</td>";
+                    emailContent += "<td>" + dr[j]["w4"].ToString() + "</td>";
+                    emailContent += "<td>" + dr[j]["w5"].ToString() + "</td>";
+                    emailContent += "<td>" + dr[j]["w6"].ToString() + "</td>";
+                    emailContent += "<td>" + dr[j]["w7"].ToString() + "</td>";
+                    emailContent += "<td>" + dr[j]["w8"].ToString() + "</td>";
+                    emailContent += "<td>" + dr[j]["Total"].ToString() + "</td>";
                     emailContent += "</tr>";
                     //拼接收件人
                     if (dr[j]["Email"] != null && dr[j]["Email"].ToString() != "")
@@ -229,10 +269,10 @@ namespace U9Service
                 string toContent = ArrayListToStr(mailSender.To);//拼接收件人字符串
                 string ccContent = ArrayListToStr(mailSender.CC);//拼接抄送人字符串
                 string sql = "";
-               try
+                try
                 {
                     mailSender.SendMail();
-                    sql = "insert into Auctus_MailLog values('" + userName + "','" + mailSender.Subject + "','" + mailSender.Body.Replace("'","''") + "','" + mailSender.From + "','" + toContent + "','" + ccContent + "',GetDate(),1,'')";
+                    sql = "insert into Auctus_MailLog values('" + userName + "','" + mailSender.Subject + "','" + mailSender.Body.Replace("'", "''") + "','" + mailSender.From + "','" + toContent + "','" + ccContent + "',GetDate(),1,'')";
                 }
                 catch (Exception ex)
                 {
@@ -269,7 +309,7 @@ namespace U9Service
         /// <returns></returns>
         public DateTime GetMonday(DateTime Date)
         {
-            
+
             if (Date.DayOfWeek == 0)
             {
                 return Date.AddDays(-6);
