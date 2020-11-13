@@ -22,7 +22,7 @@ namespace U9Service
     [System.Web.Script.Services.ScriptService]
     public class U9Service : System.Web.Services.WebService
     {
-        [WebMethod]        
+        [WebMethod]                
         public void MailTest()
         {
             try
@@ -44,27 +44,6 @@ namespace U9Service
                 return;
             }
             return;
-            ////邮箱信息设置
-            //MailSender mailSender = new MailSender();
-            //mailSender.Email = "sys_sup@auctus.cn";
-            //mailSender.Password = "Qwelsy@123";
-            //mailSender.Host = "192.168.1.1";
-            //mailSender.Port = 25;
-            //mailSender.IsBodyHtml = "true";
-            //mailSender.From = new MailAddress("sys_sup@auctus.cn", "深圳力同芯科技发展有限公司");
-            //mailSender.To = new ArrayList();
-            //mailSender.CC = new ArrayList();
-            //mailSender.Bcc = new ArrayList();
-            //mailSender.Subject = "邮件测试"+DateTime.Now.ToString("yyyyMMddHHmmss");
-            //mailSender.Body = "<H1>Hello</H2>";
-            //mailSender.To.Add("491675469@qq.com");
-            //try
-            //{
-            //    mailSender.SendMail();
-            //}
-            //catch (Exception ex)
-            //{
-            //}
         }
         /// <summary>
         /// 邮件推送供应商欠料信息        
@@ -191,30 +170,46 @@ namespace U9Service
                 if (dr.Length > 0)
                 {
                     strBody = "<H2>" + dr[0]["Supplier"].ToString() + "：</H2><H2></br>&nbsp;&nbsp;如下未来8周需求计划，供生产备货安排!</H2><h2>&nbsp;&nbsp;请务必达成交期，如有问题请及时反馈，谢谢配合与支持！！ </h2>";
-                    strBody += "<span style='font-weight:bold;'>备注：</span></br><span>电子物料要求交货数量：(紧急欠料+第一周+第二周+第三周)-已交在检</span></br><span>结构物料要求交货数量：(紧急欠料+第一周)-已交在检</span></br><span>包材/配件物料要求交货数量：(紧急欠料+第一周)-已交在检</span>";
+                    strBody += "<span style='font-weight:bold;'>备注：</span></br><span>电子物料要求交货数量：(紧急欠料+第一周+第二周+第三周)</span></br><span>结构物料要求交货数量：(紧急欠料+第一周)</span></br><span>包材/配件物料要求交货数量：(紧急欠料+第一周)</span></br><span>**预测数量仅供参考提前做生产安排，实际按计划数量如期交货**</span>";
                     //strBody = "<h2>&nbsp;&nbsp;请验证数据是否有问题，谢谢！</h2>";
                     emailContent += style + strBody;
                     emailContent += "<table>";
-                    emailContent += @"<tr bgcolor='#cae7fc'>  <td nowrap = 'nowrap'>供应商</td><td colspan='14'>" + dr[0]["Supplier"].ToString() + "</td></tr>";
-                    emailContent += "<tr bgcolor = '#cae7fc' ><td nowrap = 'nowrap'> 采购员 </td ><td colspan = '14' >" + dr[0]["Purchaser"].ToString() + "</td ></tr > ";
+                    emailContent += @"<tr bgcolor='#cae7fc'>  <td nowrap = 'nowrap'>供应商</td><td colspan='22'>" + dr[0]["Supplier"].ToString() + "</td></tr>";
+                    emailContent += "<tr bgcolor = '#cae7fc' ><td nowrap = 'nowrap'> 采购员 </td ><td colspan = '22' >" + dr[0]["Purchaser"].ToString() + "</td ></tr > ";
                     emailContent += @"<tr bgcolor = '#cae7fc' > 
-             <td nowrap = 'nowrap' rowspan = '2' > 分类 </td >    
-             <td nowrap = 'nowrap' rowspan = '2' > 料号 </td >    
-                <td nowrap = 'nowrap'style = 'min-width:160px;' rowspan = '2' > 品名 </td >         
-                     <td nowrap = 'nowrap' style = 'min-width:300px;' rowspan = '2' > 规格 </td >              
-                          <td nowrap = 'nowrap' rowspan = '2' > 已交在检 </td >                 
-                          <td nowrap = 'nowrap' rowspan = '2' > 紧急欠料 </td >                 
-                             <td nowrap = 'nowrap' > 第一周 </td >         <td nowrap = 'nowrap' > 第二周 </td >            <td nowrap = 'nowrap' > 第三周 </td >                                  
-                                              <td nowrap = 'nowrap' > 第四周 </td >            <td nowrap = 'nowrap' > 第五周 </td >            <td nowrap = 'nowrap' > 第六周 </td >                                                  
-                                                              <td nowrap = 'nowrap' > 第七周 </td >            <td nowrap = 'nowrap' > 第八周 </td >         <td nowrap = 'nowrap' rowspan = '2' > 8周欠料数量 </td >   </tr >";
+             <td nowrap = 'nowrap' rowspan = '3' > 分类 </td >    
+             <td nowrap = 'nowrap' rowspan = '3' > 料号 </td >    
+                <td nowrap = 'nowrap'style = 'min-width:160px;' rowspan = '3' > 品名 </td >         
+                     <td nowrap = 'nowrap' style = 'min-width:300px;' rowspan = '3' > 规格 </td >              
+                          <td nowrap = 'nowrap' rowspan = '3' > 已交在检 </td >                 
+                          <td nowrap = 'nowrap' rowspan = '3' > 紧急欠料 </td >                 
+                             <td colspan='2'  nowrap = 'nowrap' > 第一周 </td >         <td colspan='2'  nowrap = 'nowrap' > 第二周 </td >            <td colspan='2'  nowrap = 'nowrap' > 第三周 </td >                                  
+                                              <td colspan='2' nowrap = 'nowrap' > 第四周 </td >            <td colspan='2' nowrap = 'nowrap' > 第五周 </td >            <td colspan='2' nowrap = 'nowrap' > 第六周 </td >                                                  
+                                                              <td colspan='2' nowrap = 'nowrap' > 第七周 </td >            <td colspan='2' nowrap = 'nowrap' > 第八周 </td >         <td nowrap = 'nowrap' rowspan = '3' > 8周欠料数量 </td >   </tr >";
                 }
                 emailContent += "<tr bgcolor='#cae7fc'>";
                 DateTime monday = GetMonday(DateTime.Now);
                 for (int w = 0; w < 8; w++)
                 {
-                    emailContent += "<td nowrap='nowrap'>" + monday.AddDays(w * 7).ToString("MM-dd") + "~" + monday.AddDays((w + 1) * 7 - 1).ToString("MM-dd");
+                    emailContent += "<td colspan='2' nowrap='nowrap'>" + monday.AddDays(w * 7).ToString("MM-dd") + "~" + monday.AddDays((w + 1) * 7 - 1).ToString("MM-dd");
                 }
                 emailContent += "</tr>";
+
+                emailContent += @"<tr bgcolor='#cae7fc'>
+<td nowrap='nowrap' colspan='2'>计划交货数量</td>
+<td nowrap='nowrap' colspan='2' >计划交货数量</td>
+<td nowrap='nowrap' colspan='2'>计划交货数量</td>
+<td nowrap='nowrap'>计划交货数量</td>
+<td nowrap='nowrap'>预测交货数量</td>
+<td nowrap='nowrap'>计划交货数量</td>
+<td nowrap='nowrap'>预测交货数量</td>
+<td nowrap='nowrap'>计划交货数量</td>
+<td nowrap='nowrap'>预测交货数量</td>
+<td nowrap='nowrap'>计划交货数量</td>
+<td nowrap='nowrap'>预测交货数量</td>
+<td nowrap='nowrap'>计划交货数量</td>
+<td nowrap='nowrap'>预测交货数量</td>
+<tr>";
                 ArrayList to = new ArrayList();
                 ArrayList cc = new ArrayList();
                 for (int j = 0; j < dr.Length; j++)
@@ -227,14 +222,19 @@ namespace U9Service
                     emailContent += "<td>" + dr[j]["SPECS"].ToString() + "</td>";
                     emailContent += "<td>" + dr[j]["RcvQty"].ToString() + "</td>";
                     emailContent += "<td>" + dr[j]["w0"].ToString() + "</td>";
-                    emailContent += "<td>" + dr[j]["w1"].ToString() + "</td>";
-                    emailContent += "<td>" + dr[j]["w2"].ToString() + "</td>";
-                    emailContent += "<td>" + dr[j]["w3"].ToString() + "</td>";
+                    emailContent += "<td colspan='2'>" + dr[j]["w1"].ToString() + "</td>";
+                    emailContent += "<td colspan='2'>" + dr[j]["w2"].ToString() + "</td>";
+                    emailContent += "<td colspan='2'>" + dr[j]["w3"].ToString() + "</td>";
                     emailContent += "<td>" + dr[j]["w4"].ToString() + "</td>";
+                    emailContent += "<td>" + dr[j]["w42"].ToString() + "</td>";
                     emailContent += "<td>" + dr[j]["w5"].ToString() + "</td>";
+                    emailContent += "<td>" + dr[j]["w52"].ToString() + "</td>";
                     emailContent += "<td>" + dr[j]["w6"].ToString() + "</td>";
+                    emailContent += "<td>" + dr[j]["w62"].ToString() + "</td>";
                     emailContent += "<td>" + dr[j]["w7"].ToString() + "</td>";
+                    emailContent += "<td>" + dr[j]["w72"].ToString() + "</td>";
                     emailContent += "<td>" + dr[j]["w8"].ToString() + "</td>";
+                    emailContent += "<td>" + dr[j]["w82"].ToString() + "</td>";
                     emailContent += "<td>" + dr[j]["Total"].ToString() + "</td>";
                     emailContent += "</tr>";
                     //拼接收件人
