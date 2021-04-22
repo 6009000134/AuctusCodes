@@ -26,7 +26,7 @@ namespace U9Service
             // 发送请求打开程序。
             string url = "http://192.168.1.226:9090/U9Service/WebForm1.aspx";
             //string url = "http://localhost:11614/WebForm1.aspx";
-            
+
             System.Net.HttpWebRequest myHttpWebRequest = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(url);
             System.Net.HttpWebResponse myHttpWebResponse = (System.Net.HttpWebResponse)myHttpWebRequest.GetResponse();
             System.IO.Stream receiveStream = myHttpWebResponse.GetResponseStream();//得到回写的字节流
@@ -46,11 +46,13 @@ namespace U9Service
 
             // 每天9点发送测试邮件
             // e.SignalTime.DayOfWeek == DayOfWeek.Monday&&
-            if (e.SignalTime.DayOfWeek == DayOfWeek.Monday && hour == 9 && mint== 0 && second == 0)
+            //if (e.SignalTime.DayOfWeek == DayOfWeek.Monday && hour == 10 && mint == 23 && second == 30)
+            if (e.SignalTime.DayOfWeek == DayOfWeek.Monday && hour == 8 && mint == 10 && second == 0)
             {
+                // 发送请求打开程序。
                 string url = "http://192.168.1.226:9090/U9Service/U9Service.asmx/MailTest";
-                //string url = "http://localhost:11614/U9Service.asmx/MailTest";                
-                System.Net.HttpWebRequest myHttpWebRequest = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(url);                
+                //url = "http://localhost:11614/U9Service.asmx/MailTest";
+                System.Net.HttpWebRequest myHttpWebRequest = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(url);
                 System.Net.HttpWebResponse myHttpWebResponse = (System.Net.HttpWebResponse)myHttpWebRequest.GetResponse();
                 System.IO.Stream receiveStream = myHttpWebResponse.GetResponseStream();//得到回写的字节流
             }

@@ -85,7 +85,7 @@ namespace U9Service
             //邮箱信息设置
             MailSender mailSender = new MailSender();
             mailSender.Email = "sys_sup@auctus.cn";
-            mailSender.Password = "Qwelsy@123";
+            mailSender.Password = "Qwelsy@1234";
             mailSender.Host = "192.168.1.1";
             mailSender.Port = 25;
             mailSender.IsBodyHtml = "true";
@@ -170,7 +170,7 @@ namespace U9Service
                 if (dr.Length > 0)
                 {
                     strBody = "<H2>" + dr[0]["Supplier"].ToString() + "：</H2><H2></br>&nbsp;&nbsp;如下未来8周需求计划，供生产备货安排!</H2><h2>&nbsp;&nbsp;请务必达成交期，如有问题请及时反馈，谢谢配合与支持！！ </h2>";
-                    strBody += "<span style='font-weight:bold;'>备注：</span></br><span>电子物料要求交货数量：(紧急欠料+第一周+第二周+第三周)</span></br><span>结构物料要求交货数量：(紧急欠料+第一周)</span></br><span>包材/配件物料要求交货数量：(紧急欠料+第一周)</span></br><span>**预测数量仅供参考提前做生产安排，实际按计划数量如期交货**</span>";
+                    strBody += "<span style='font-weight:bold;'>备注：</span></br><span>电子物料要求交货数量：(紧急欠料+第一周+第二周+第三周)-已交在检</span></br><span>结构物料要求交货数量：(紧急欠料+第一周)-已交在检</span></br><span>包材/配件物料要求交货数量：(紧急欠料+第一周)-已交在检</span></br><span>**预测数量仅供参考提前做生产安排，实际按计划数量如期交货**</span>";
                     //strBody = "<h2>&nbsp;&nbsp;请验证数据是否有问题，谢谢！</h2>";
                     emailContent += style + strBody;
                     emailContent += "<table>";
@@ -191,7 +191,8 @@ namespace U9Service
                 DateTime monday = GetMonday(DateTime.Now);
                 for (int w = 0; w < 8; w++)
                 {
-                    emailContent += "<td colspan='2' nowrap='nowrap'>" + monday.AddDays(w * 7).ToString("MM-dd") + "~" + monday.AddDays((w + 1) * 7 - 1).ToString("MM-dd");
+                    //emailContent += "<td colspan='2' nowrap='nowrap'>" + monday.AddDays(w * 7).ToString("MM-dd") + "~" + monday.AddDays((w + 1) * 7 - 1).ToString("MM-dd")+"</td>";
+                    emailContent += "<td colspan='2' nowrap='nowrap'>" + monday.AddDays(w * 7).ToString("MM-dd") + "</td>";
                 }
                 emailContent += "</tr>";
 
